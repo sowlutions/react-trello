@@ -67,6 +67,17 @@ class Lane extends Component {
         currentPage: nextProps.currentPage
       })
     }
+    if (!isEqual(this.props.showDeleteSection, nextProps.showDeleteSection)) {
+      if (!nextProps.showDeleteSection && this.state.isDraggingOver){
+          this.setState({
+              isDraggingOver: false
+          })
+      }
+        // this.setState({
+        //     currentPage: nextProps.currentPage
+        // })
+    }
+
   }
 
   removeCard = (laneId, cardId) => {
@@ -188,15 +199,22 @@ class Lane extends Component {
         <Container
           orientation="vertical"
           groupName="TrelloLane"
+          isDraggingOver={isDraggingOver}
           dragClass={cardDragClass}
           onDragStart={this.onDragStart}
           onDrop={e => this.onDragEnd(id, e)}
           onDragEnter={() => this.setState({isDraggingOver: true})}
           onDragLeave={() => this.setState({isDraggingOver: false})}
+          onMouseOut={() => this.setState({isDraggingOver: false})}
           shouldAcceptDrop={this.shouldAcceptDrop}
           getChildPayload={index => this.props.getCardDetails(id, index)}>
           {cardList}
         </Container>
+        {
+          id == 'delete_lane' &&
+          <span data-dragging={isDraggingOver.toString()} className='delete_icon'>{isDraggingOver ? 'delete' : 'delete_outline'}</span>
+        }
+
         {editable && !addCardMode && this.renderAddCardLink()}
         {addCardMode && this.renderNewCard()}
       </ScrollableLane>
@@ -240,10 +258,10 @@ class Lane extends Component {
     const {id, onLaneClick, ...otherProps} = this.props
     return (
       <Section {...otherProps} key={id} onClick={() => onLaneClick && onLaneClick(id)} draggable={false}>
-        {this.renderHeader()}
+        {id!== 'delete_lane' && this.renderHeader()}
         {this.renderDragContainer(isDraggingOver)}
-        {loading && <Loader />}
-        {this.renderFooter()}
+        {id!== 'delete_lane' &&loading && <Loader />}
+        {id!== 'delete_lane' &&this.renderFooter()}
       </Section>
     )
   }

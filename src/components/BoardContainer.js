@@ -24,12 +24,18 @@ class BoardContainer extends Component {
           case 'REFRESH_BOARD':
             return actions.loadBoard(event.data)
           case 'MOVE_CARD':
-            return actions.moveCardAcrossLanes({
-              fromLaneId: event.fromLaneId,
-              toLaneId: event.toLaneId,
-              cardId: event.cardId,
-              index: event.index
-            })
+            if (event && event.fromLaneId && event.toLaneId && event.cardId && event.index){
+                return actions.moveCardAcrossLanes({
+                    fromLaneId: event.fromLaneId,
+                    toLaneId: event.toLaneId,
+                    cardId: event.cardId,
+                    index: event.index
+                })
+            }
+            else{
+              return true
+            }
+
           case 'UPDATE_LANES':
             return actions.updateLanes(event.lanes)
         }
@@ -77,6 +83,17 @@ class BoardContainer extends Component {
     return this.props.reducerData.lanes[index]
   }
 
+  onDeleteDrop = (dropResult) => {
+    if (this.props.actions && dropResult && dropResult.payload && dropResult.payload.laneId  && dropResult.payload.id){
+        this.props.actions.removeCard({
+            laneId: dropResult.payload.laneId,
+            cardId: dropResult.payload.id
+        })
+    }
+    if (this.props.onDraggableDeleteFunction && dropResult && dropResult.payload.laneId  && dropResult.payload.id){
+        this.props.onDraggableDeleteFunction(dropResult)
+    }
+  }
   render() {
     const {id, reducerData, draggable, laneDraggable, laneDragClass, style, ...otherProps} = this.props
     // Stick to whitelisting attributes to segregate board and lane props
@@ -105,8 +122,8 @@ class BoardContainer extends Component {
 
     return (
       <BoardDiv style={style} {...otherProps} draggable={false}>
-       <Container>
-        <div style={{width:'100%',height: '50px',border: '1px solid red'}}></div>
+
+
         <Container
           orientation="horizontal"
           onDragStart={this.onDragStart}
@@ -121,8 +138,10 @@ class BoardContainer extends Component {
               <Lane
                 key={id}
                 id={id}
+
                 getCardDetails={this.getCardDetails}
                 index={index}
+                showDeleteSection={this.props.showDeleteSection}
                 droppable={droppable === undefined ? true : droppable}
                 {...otherProps}
                 {...passthroughProps}
@@ -131,11 +150,15 @@ class BoardContainer extends Component {
             return draggable && laneDraggable ? (
               <Draggable key={lane.id}>{laneToRender}</Draggable>
             ) : (
-              <span key={lane.id}>{laneToRender}</span>
+              <span
+              key={lane.id}
+              className={`${lane.id=='delete_lane' ? 'delete_section' : 'other_droppable_section'} ${(lane.id=='delete_lane' && !this.props.showDeleteSection) ? 'hide' : ''}`}
+              >{laneToRender}</span>
             )
           })}
         </Container>
-       </Container>
+
+
       </BoardDiv>
     )
   }

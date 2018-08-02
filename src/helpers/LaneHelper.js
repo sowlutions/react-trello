@@ -53,6 +53,7 @@ const LaneHelper = {
   },
 
   moveCardAcrossLanes: (state, {fromLaneId, toLaneId, cardId, index}) => {
+    try{
     let cardToMove = null
     const interimLanes = state.lanes.map(lane => {
       if (lane.id === fromLaneId) {
@@ -65,6 +66,11 @@ const LaneHelper = {
     })
     const updatedState = update(state, {lanes: {$set: interimLanes}})
     return LaneHelper.appendCardToLane(updatedState, {laneId: toLaneId, card: cardToMove, index: index})
+        }
+      catch(err){
+      console.log('ERROR:',err)
+          return state
+      }
   },
 
   updateCardsForLane: (state, {laneId, cards}) => {
