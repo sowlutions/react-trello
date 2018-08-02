@@ -1,21 +1,20 @@
 {
   "name": "react-trello",
-  "description": "Pluggable components to add a trello like kanban board to your application",
-  "main": "src/index.js",
+  "description":
+    "Pluggable components to add a trello like kanban board to your application",
+  "main": "dist/index.js",
   "jsnext:main": "components/index.js",
   "module": "components/index.js",
-  "files": [
-    "src",
-    "dist",
-    "README"
-  ],
+  "files": ["src", "dist", "README"],
   "scripts": {
     "prepublish": "npm run build",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release":
+      "semantic-release pre && npm publish && semantic-release post",
     "storybook": "start-storybook -p 9002",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:cover": "istanbul cover -x *.test.js _mocha -- -R spec --require tests/config/setup 'tests/**/*.test.js'",
+    "test:cover":
+      "istanbul cover -x *.test.js _mocha -- -R spec --require tests/config/setup 'tests/**/*.test.js'",
     "test:report": "cat ./coverage/lcov.info | codecov && rm -rf ./coverage",
     "build": "babel src --out-dir dist --copy-files",
     "docs": "build-storybook -o docs",
@@ -27,11 +26,7 @@
     "type": "git",
     "url": "https://github.com/rcdexta/react-trello"
   },
-  "keywords": [
-    "react",
-    "trello",
-    "board"
-  ],
+  "keywords": ["react", "trello", "board"],
   "author": "RC, Prakash",
   "license": "MIT",
   "bugs": {
