@@ -105,6 +105,8 @@ class BoardContainer extends Component {
 
     return (
       <BoardDiv style={style} {...otherProps} draggable={false}>
+       <Container>
+        <div style={{width:'100%',height: '50px',border: '1px solid red'}}></div>
         <Container
           orientation="horizontal"
           onDragStart={this.onDragStart}
@@ -133,6 +135,7 @@ class BoardContainer extends Component {
             )
           })}
         </Container>
+       </Container>
       </BoardDiv>
     )
   }
